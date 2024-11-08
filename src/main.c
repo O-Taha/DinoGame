@@ -52,7 +52,7 @@ void SetUpGame() {
 //		DrawTexture(Dino.sprite, 400, Dino.posY, WHITE);
 //}
 
-
+//blalallallalaala
 int main ()
 {
 	SetUpGame();
