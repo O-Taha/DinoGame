@@ -24,10 +24,13 @@ For a C++ project simply rename the file to .cpp and re-run the build script
 
 */
 
+// How to run on Linux : run make then the exe is in bin folder -> Press F5 
 
 #include "raylib.h"
-
 #include "../include/resource_dir.h"	// utility header for SearchAndSetResourceDir
+
+//Constants
+#define GRAVITY -10
 
 //Player Object
 typedef struct {
@@ -44,15 +47,15 @@ void SetUpGame() {
 	InitWindow(1280, 800, "Dino Game");
 	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
 	SearchAndSetResourceDir("resources");
+	SetTargetFPS(60);
 	return;
 }
 
-	//Game Logic functions
-//void UpdatePlayerPos() {
-//		DrawTexture(Dino.sprite, 400, Dino.posY, WHITE);
-//}
+void UpdatePlayerPos(Player player) {
+	DrawTexture(player.sprite, 400, player.posY, WHITE);
+	return;
+}
 
-//blalallallalaala
 int main ()
 {
 	SetUpGame();
@@ -70,10 +73,9 @@ int main ()
 		ClearBackground(WHITE);
 
 		// draw some text using the default font
-		DrawText("Hello Raylib", 200,200,20,WHITE);
+		DrawText("Testing", 200,200,20,BLACK);
 
-		
-		// end the frame and get ready for the next one  (display frame, poll input, etc...)
+		UpdatePlayerPos(Dino);
 		EndDrawing();
 	}
 
