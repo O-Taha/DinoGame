@@ -48,9 +48,9 @@ void SetUpGame() {
 }
 
 	//Game Logic functions
-void UpdatePlayerPos() {
-		DrawTexture(Dino.sprite, 400, Dino.posY, WHITE);
-}
+//void UpdatePlayerPos() {
+//		DrawTexture(Dino.sprite, 400, Dino.posY, WHITE);
+//}
 
 
 int main ()
