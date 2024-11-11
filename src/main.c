@@ -26,7 +26,7 @@ For a C++ project simply rename the file to .cpp and re-run the build script
 
 
 #include "raylib.h"
-#include "../include/resource_dir.h"	// utility header for SearchAndSetResourceDir
+#include "resource_dir.h"	// utility header for SearchAndSetResourceDir
 
 //Constants
 #define GRAVITY -10

@@ -1,6 +1,8 @@
 Changelog for all additions to the project :
 
 11/11/24 :
+- Added -I../include -Iinclude -I/include as extra file paths for headers in DinoGame.make to try and fix the 'resource_dir.h' file not found (didn't work)
+
 - Added instructions to the README.md 
     - on building/running the executable
     - on using Raylib's Makefile and how to modify it (almost there)
