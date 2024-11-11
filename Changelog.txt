@@ -1,0 +1,9 @@
+Changelog for all additions to the project :
+
+11/11/24 :
+- Added instructions to the README.md 
+    - on building/running the executable
+    - on using Raylib's Makefile and how to modify it (almost there)
+
+- Removed Makefile(s) from the .gitignore : they're now public on Github 
+(Pro-tip : Ignored/untracked files are grey in VSCode's explorer)

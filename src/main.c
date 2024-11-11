@@ -24,7 +24,6 @@ For a C++ project simply rename the file to .cpp and re-run the build script
 
 */
 
-// How to run on Linux : run make then the exe is in bin folder -> Press F5 
 
 #include "raylib.h"
 #include "../include/resource_dir.h"	// utility header for SearchAndSetResourceDir
