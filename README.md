@@ -1,8 +1,8 @@
 # Before pulling anything: READ THE CHANGELOG
 
 ## How to run on Linux:
-- Run `make`
-- (The exe is in bin folder) Press F5
+- (The exe is in bin folder) Press F5 (Runs `make` automatically)
+If you get the "Errors exist after running PreLaunchTask 'build debug'" -> *your code still has errors...*
 
 ## How to configure the makefile (Retroengineering 😎):
 The global Makefile in the working directory (now visible on Github) uses multiple implicit and unimplicit variables, which makes it pretty unreadable...
@@ -42,3 +42,6 @@ TARGET: the subdirectory of TARGETDIR
 OBJDIR: the directory where the code object is output
 
 Line 179: The -MF option of GCC may have something to do with outputting the dependencies for the make command? Look into it
+
+**16/11/24 :** Premake5 is the tool that automatically generates .make makefiles. 
+To take into account new, separate C files, just re-run it by running cd into build/ then ./premake5 gmake2

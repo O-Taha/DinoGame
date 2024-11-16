@@ -400,3 +400,5 @@ FodyWeavers.xsd
 raylib-master
 #Makefile
 /*.sln
+
+compile_commands.json

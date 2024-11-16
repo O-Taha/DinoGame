@@ -26,45 +26,25 @@ For a C++ project simply rename the file to .cpp and re-run the build script
 
 
 #include "raylib.h"
-#include "resource_dir.h"	// utility header for SearchAndSetResourceDir
 
-//Constants
-#define GRAVITY -10
+//Personal libraries
+#include "utility.h"
+#include "player.h"
 
-//Player Object
-typedef struct {
-	float posY;
-	Texture sprite;
-} Player;
-
-//Functions
-	//Utility functions
-void SetUpGame() {
-	// Tell the window to use vysnc and work on high DPI displays
-	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
-	// Create the window and OpenGL context
-	InitWindow(1280, 800, "Dino Game");
-	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
-	SearchAndSetResourceDir("resources");
-	SetTargetFPS(60);
-	return;
-}
-
-void UpdatePlayerPos(Player player) {
-	DrawTexture(player.sprite, 400, player.posY, WHITE);
-	return;
-}
 
 int main ()
 {
 	SetUpGame();
-	// Load a texture from the resources directory
 	Texture wabbit = LoadTexture("wabbit_alpha.png");
-	Player Dino = {0, wabbit};
+	
+	Player Dino = {0, 0, wabbit};
 	
 	// game loop
-	while (!WindowShouldClose())		// run the loop untill the user presses ESCAPE or presses the Close button on the window
+	while (!WindowShouldClose()) // run the loop untill the user presses ESCAPE or presses the Close button on the window
 	{
+		float delta = GetFrameTime();	
+
+		UpdatePlayerPhysics(&Dino, delta);
 		// drawing
 		BeginDrawing();
 
@@ -72,9 +52,9 @@ int main ()
 		ClearBackground(WHITE);
 
 		// draw some text using the default font
-		DrawText("Testing", 200,200,20,BLACK);
+		DrawText("To do : \nPlayer states\nJump button", 200,200,20,BLACK);
 
-		UpdatePlayerPos(Dino);
+		UpdatePlayerPos(&Dino);
 		EndDrawing();
 	}
 
