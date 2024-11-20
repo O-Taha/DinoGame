@@ -22,6 +22,6 @@ void UpdatePlayerPhysics(Player* player, float delta) {
 }
 //Handles actual on-screen positon (as opposed to theo)
 void UpdatePlayerPos(Player *player) {
-	DrawTexture(player->sprite, 1000, player->posY, WHITE);
+	DrawTexture(player->sprite, POSX, player->posY, WHITE);
 	return;
 }

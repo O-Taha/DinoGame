@@ -1,5 +1,9 @@
 Changelog for all additions to the project :
 
+20/11/24 :
+- Jumping
+- Player States
+
 16/11/24 :
 - Generated the compile_commands.json with bear tool for clang to recognize all included libraries (local to my computer since paths are too)
 - FIXED SEPARATE COMPILATION (just had to rerun ./premake5 gmake2 in the build/, which automatically generates DinoGame.make)

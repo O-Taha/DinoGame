@@ -3,7 +3,8 @@
 #include "raylib.h"
 //Constants
 #define GRAVITY 1000
-#define GROUND_Y 300
+#define GROUND_Y 600
+#define POSX 200
 
 typedef enum {
 		JUMPING,

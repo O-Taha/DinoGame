@@ -14,3 +14,7 @@ void SetUpGame() {
 	SetTargetFPS(60);
 	return;
 }
+
+void DrawScenery() {
+	
+} 
