@@ -37,7 +37,7 @@ int main ()
 	SetUpGame();
 	Texture wabbit = LoadTexture("wabbit_alpha.png");
 	
-	Player Dino = {0, 0, wabbit};
+	Player Dino = {0, 0, wabbit, JUMPING};
 	
 	// game loop
 	while (!WindowShouldClose()) // run the loop untill the user presses ESCAPE or presses the Close button on the window
@@ -52,7 +52,7 @@ int main ()
 		ClearBackground(WHITE);
 
 		// draw some text using the default font
-		DrawText("To do : \nPlayer states\nJump button", 200,200,20,BLACK);
+		DrawText("To do : Placing elements at right positions\nAnimations\nSFX\nMusic\nMenu", 200,200,20,BLACK);
 
 		UpdatePlayerPos(&Dino);
 		EndDrawing();
