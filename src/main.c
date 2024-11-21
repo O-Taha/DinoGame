@@ -23,7 +23,7 @@ For a C++ project simply rename the file to .cpp and re-run the build script
 --  3. This notice may not be removed or altered from any source distribution.
 
 */
-
+//la commande pour gcc c'est ce truc :  gcc -o game main.c player.c utility.c -I../include -lraylib -lGL -lm -lpthread -ldl -lX11
 
 #include "raylib.h"
 
