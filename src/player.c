@@ -15,13 +15,13 @@ void UpdatePlayerPhysics(Player* player, float delta) {
 	}
 	//Jumping
 	if (IsKeyPressed(KEY_SPACE) & (player->state == RUNNING)) {
-		player->velocityY -= GRAVITY/2.0;
+		player->velocityY -= GRAVITY/1.2;
 		player->state = JUMPING;
 	}
 	return;
 }
-//Handles actual on-screen positon (as opposed to theo)
+//Handles actual on-screen positon (as opposed to UpdatePlayerPhysics)
 void UpdatePlayerPos(Player *player) {
-	DrawTexture(player->sprite, POSX, player->posY, WHITE);
+	DrawTexture(player->sprite, POSX, player->posY - player->sprite.height, WHITE);
 	return;
 }

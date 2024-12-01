@@ -23,7 +23,7 @@ For a C++ project simply rename the file to .cpp and re-run the build script
 --  3. This notice may not be removed or altered from any source distribution.
 
 */
-//la commande pour gcc c'est ce truc :  gcc -o game main.c player.c utility.c -I../include -lraylib -lGL -lm -lpthread -ldl -lX11
+
 
 #include "raylib.h"
 
@@ -35,16 +35,19 @@ For a C++ project simply rename the file to .cpp and re-run the build script
 int main ()
 {
 	SetUpGame();
-	Texture wabbit = LoadTexture("wabbit_alpha.png");
-	
-	Player Dino = {0, 0, wabbit, JUMPING};
+
+	Texture buns_sprite = LoadTexture("Buns_Spritesheet.png");
+
+	Player buns = {0, 0, buns_sprite, JUMPING};
+	InstantiateCloud(clouds);
 	
 	// game loop
 	while (!WindowShouldClose()) // run the loop untill the user presses ESCAPE or presses the Close button on the window
 	{
 		float delta = GetFrameTime();	
+		DrawScenery(delta);
 
-		UpdatePlayerPhysics(&Dino, delta);
+		UpdatePlayerPhysics(&buns, delta);
 		// drawing
 		BeginDrawing();
 
@@ -52,15 +55,15 @@ int main ()
 		ClearBackground(WHITE);
 
 		// draw some text using the default font
-		DrawText("To do : Placing elements at right positions\nAnimations\nSFX\nMusic\nMenu", 200,200,20,BLACK);
+		DrawText("To do : Placing elements at right positions\nSpawning hazards\nAnimations\nSFX\nMusic\nMenu", 200,200,20,BLACK);
 
-		UpdatePlayerPos(&Dino);
+		UpdatePlayerPos(&buns);
 		EndDrawing();
 	}
 
 	// cleanup
 	// unload our texture so it can be cleaned up
-	UnloadTexture(wabbit);
+	UnloadTexture(buns_sprite);
 
 	// destory the window and cleanup the OpenGL context
 	CloseWindow();
