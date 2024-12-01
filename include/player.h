@@ -10,16 +10,19 @@ typedef enum {
 		JUMPING,
 		RUNNING,
 		DEAD
-	} player_state;
+} Player_state;
 
 //Player Object
 typedef struct {
 	float posY;
 	float velocityY;
 	Texture sprite;
-	player_state state;
+	Player_state state;
 } Player;
 
-void UpdatePlayerPos(Player *player);
+
+//Handles physics variables such as velocity and position
 void UpdatePlayerPhysics(Player *player, float delta);
+//Handles actual on-screen positon (as opposed to UpdatePlayerPhysics)
+void UpdatePlayerPos(Player *player); 
 #endif

@@ -1,5 +1,10 @@
 Changelog for all additions to the project :
 
+01/12/24 :
+- Created new, custom sprites : YOU NEED TO DOWNLOAD THEM MANUALY IF THEY DON'T LOAD
+- Added clouds
+- Corrected player position and jump according to new sprites
+
 20/11/24 :
 - Jumping
 - Player States
