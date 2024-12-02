@@ -57,7 +57,7 @@ int main ()
 		ClearBackground(SKYBLUE);
 
 		// draw some text using the default font
-		DrawText("To do : Placing elements at right positions\nSpawning hazards\nAnimations\nSFX\nMusic\nMenu", 200,200,20,BLACK);
+		DrawText("To do : Placing elements at right positions\nMenu\nSpawning hazards\nSFX\nMusic", 200,200,20,BLACK);
 
 		UpdatePlayer(&buns);
 		EndDrawing();

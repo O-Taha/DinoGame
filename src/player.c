@@ -12,11 +12,13 @@ void UpdatePlayerPhysics(Player* player, float delta) {
 	if (player->posY > GROUND_Y) {
 		player->velocityY = 0;
 		player->posY = GROUND_Y;
+		player->frame_speed = 6;
 		player->state = RUNNING;
 	}
 	//Jumping
 	if (IsKeyPressed(KEY_SPACE) & (player->state == RUNNING)) {
 		player->velocityY -= GRAVITY/1.2;
+		player->frame_speed *= 2;
 		player->state = JUMPING;
 	}
 	return;
