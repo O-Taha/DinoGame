@@ -37,27 +37,29 @@ int main ()
 	SetUpGame();
 
 	Texture buns_sprite = LoadTexture("Buns_Spritesheet.png");
+	Rectangle current_frame_sheet = {0.0, 0.0, (float)buns_sprite.width/3.0, (float)buns_sprite.height};
 
-	Player buns = {0, 0, buns_sprite, JUMPING};
-	InstantiateCloud(clouds);
+	Player buns = {0, 0, buns_sprite, JUMPING, 0, 6, 0, current_frame_sheet};
 	
+	InstantiateCloud(clouds);
+
 	// game loop
 	while (!WindowShouldClose()) // run the loop untill the user presses ESCAPE or presses the Close button on the window
 	{
 		float delta = GetFrameTime();	
 		DrawScenery(delta);
-
+	
 		UpdatePlayerPhysics(&buns, delta);
+		UpdatePlayerAnim(&buns);
 		// drawing
 		BeginDrawing();
-
 		// Setup the backbuffer for drawing (clear color and depth buffers)
-		ClearBackground(WHITE);
+		ClearBackground(SKYBLUE);
 
 		// draw some text using the default font
 		DrawText("To do : Placing elements at right positions\nSpawning hazards\nAnimations\nSFX\nMusic\nMenu", 200,200,20,BLACK);
 
-		UpdatePlayerPos(&buns);
+		UpdatePlayer(&buns);
 		EndDrawing();
 	}
 

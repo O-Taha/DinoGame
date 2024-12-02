@@ -1,5 +1,9 @@
 Changelog for all additions to the project :
 
+02/12/24 :
+- Added sprite animation : DON'T FORGET ANY VALUE FOR THE STRUCT PLAYER'S INITIALIZATION
+- Placeholder blue BG
+
 01/12/24 :
 - Created new, custom sprites : YOU NEED TO DOWNLOAD THEM MANUALY IF THEY DON'T LOAD
 - Added clouds

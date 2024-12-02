@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include "player.h"
 
+
 //Handles physics variables such as velocity and position
 void UpdatePlayerPhysics(Player* player, float delta) {
 	//Directly incrementing posY by gravity results in constant fall speed
@@ -20,8 +21,19 @@ void UpdatePlayerPhysics(Player* player, float delta) {
 	}
 	return;
 }
-//Handles actual on-screen positon (as opposed to UpdatePlayerPhysics)
-void UpdatePlayerPos(Player *player) {
-	DrawTexture(player->sprite, POSX, player->posY - player->sprite.height, WHITE);
+void UpdatePlayerAnim(Player *player) {
+	player->frame_counter++;
+
+	if (player->frame_counter >= (60/player->frame_speed)) {
+		player->frame_counter = 0;
+		player->current_frame++;
+		if (player->current_frame > 2) player->current_frame = 0; //Used to loop current_frame from 0 to 2
+		player->frame_sheet.x = (float)player->current_frame*player->sprite.width/3;
+	}
+}
+
+//Handles actual on-screen positon and animation (as opposed to UpdatePlayerPhysics)
+void UpdatePlayer(Player *player) {
+	DrawTextureRec(player->sprite, player->frame_sheet, (Vector2){POSX, player->posY - player->sprite.height}, WHITE);
 	return;
 }

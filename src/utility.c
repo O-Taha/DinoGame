@@ -7,7 +7,7 @@
 /*Initialising variables*/
 float global_velocity = 100;
 float cloud_velocity = 10;
-Cloud clouds[3];
+Cloud clouds[MAXCLOUDS];
 
 //Sets up environment
 void SetUpGame() {
@@ -22,7 +22,7 @@ void SetUpGame() {
 }
 
 void InstantiateCloud(Cloud* cloud_arr) {
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < MAXCLOUDS; i++) {
 		Cloud cloud;
 		cloud.position.x = SCREENWIDTH;
 		cloud.position.y = GetRandomValue(50, GROUND_Y/2);
@@ -33,7 +33,7 @@ void InstantiateCloud(Cloud* cloud_arr) {
 }
 
 void UpdateCloudPhysics(Cloud* cloud_arr, float delta) {
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < MAXCLOUDS; i++) {
 		cloud_arr[i].position.x -= cloud_arr[i].velocity * delta;
 
         if (cloud_arr[i].position.x < -cloud_arr[i].sprite.width) { //if the edge of the screen is reached
@@ -45,7 +45,7 @@ void UpdateCloudPhysics(Cloud* cloud_arr, float delta) {
 }
 
 void DrawClouds(Cloud* cloud_arr, float delta) {
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < MAXCLOUDS; i++) {
 		UpdateCloudPhysics(cloud_arr, delta);
         DrawTexture(cloud_arr[i].sprite, cloud_arr[i].position.x, cloud_arr[i].position.y, WHITE);
 	}

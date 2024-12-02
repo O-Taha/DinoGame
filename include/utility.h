@@ -4,6 +4,7 @@
 
 #define SCREENWIDTH 1280
 #define SCREENHEIGHT 800
+#define MAXCLOUDS 4
 
 extern float global_velocity; //DO NOT CHANGE TO CONST : it will vary
 
@@ -13,7 +14,7 @@ typedef struct {
 	Texture sprite;
 } Cloud;
 
-extern Cloud clouds[3];
+extern Cloud clouds[MAXCLOUDS];
 extern float cloud_velocity;
 
 void SetUpGame(); //Sets up environment
