@@ -16,7 +16,7 @@ void UpdatePlayerPhysics(Player* player, float delta) {
 		player->state = RUNNING;
 	}
 	//Jumping
-	if (IsKeyPressed(KEY_SPACE) & (player->state == RUNNING)) {
+	if ((IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_UP)) & (player->state == RUNNING)) {
 		player->velocityY -= GRAVITY/1.2;
 		player->frame_speed *= 2;
 		player->state = JUMPING;
@@ -29,7 +29,7 @@ void UpdatePlayerAnim(Player *player) {
 	if (player->frame_counter >= (60/player->frame_speed)) {
 		player->frame_counter = 0;
 		player->current_frame++;
-		if (player->current_frame > 2) player->current_frame = 0; //Used to loop current_frame from 0 to 2
+		player->current_frame %= 3; //Used to loop current_frame from 0 to 2
 		player->frame_sheet.x = (float)player->current_frame*player->sprite.width/3;
 	}
 }

@@ -32,11 +32,13 @@ For a C++ project simply rename the file to .cpp and re-run the build script
 #include "player.h"
 
 
+Game_state game_state = MENU;
+
 int main ()
 {
 	SetUpGame();
+	Texture buns_sprite = LoadTexture("Buns_Spritesheet.png"); //Initializer element is not a compile-time constant : Needs to be initialized during Runtime (i.e. in a function)
 
-	Texture buns_sprite = LoadTexture("Buns_Spritesheet.png");
 	Rectangle current_frame_sheet = {0.0, 0.0, (float)buns_sprite.width/3.0, (float)buns_sprite.height};
 
 	Player buns = {0, 0, buns_sprite, JUMPING, 0, 6, 0, current_frame_sheet};
@@ -48,9 +50,23 @@ int main ()
 	{
 		float delta = GetFrameTime();	
 		DrawScenery(delta);
-	
-		UpdatePlayerPhysics(&buns, delta);
-		UpdatePlayerAnim(&buns);
+		switch (game_state) {
+			case MENU:
+			DrawText("BUNS RUSH", SCREENWIDTH/2, SCREENHEIGHT/4, 50, BLACK);
+			if (IsKeyPressed(KEY_SPACE)) game_state = GAME;
+			break;
+
+			case GAME:
+			
+			UpdatePlayerPhysics(&buns, delta);
+			UpdatePlayerAnim(&buns);
+			break;
+
+			case GAMEOVER:
+			break;
+		
+		}
+		
 		// drawing
 		BeginDrawing();
 		// Setup the backbuffer for drawing (clear color and depth buffers)

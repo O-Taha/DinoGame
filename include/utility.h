@@ -8,12 +8,15 @@
 
 extern float global_velocity; //DO NOT CHANGE TO CONST : it will vary
 
+typedef enum _Game_state {MENU, GAME, GAMEOVER} Game_state;
+
+extern Game_state game_state;
+
 typedef struct {
 	Vector2 position;
 	float velocity;
 	Texture sprite;
 } Cloud;
-
 extern Cloud clouds[MAXCLOUDS];
 extern float cloud_velocity;
 
