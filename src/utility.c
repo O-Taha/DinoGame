@@ -77,4 +77,5 @@ void UpdateObstacle(Obstacle* obstacle, float delta) {
 void DrawScenery(float delta) {
 	DrawLine(0, GROUND_Y, SCREENWIDTH, GROUND_Y, BLACK);
 	DrawClouds(clouds, delta);
+	if (game_state == GAME) DrawTexture(cactus.texture, cactus.position.x, cactus.position.y, WHITE);;
 }
