@@ -1,29 +1,24 @@
 #include "raylib.h"
 #include "utility.h" 
 #include "player.h"
-#include "obstacle.h"
 
 int main() {
     // Initialize the game
     SetUpGame();
 
-    // Load player sprite
+    // Load sprites
     Texture buns_sprite = LoadTexture("Buns_Spritesheet.png");
-    Rectangle current_frame_sheet = {0.0, 0.0, (float)buns_sprite.width / 3.0, (float)buns_sprite.height};
-    
-    // Initialize player
-    Player buns = {0, 0, buns_sprite, JUMPING, 0, 6, 0, current_frame_sheet};
-    
-    // Initialize clouds
-    InstantiateCloud(clouds);
+    Texture cactus_texture = LoadTexture("Cactus.png");
 
-    // Load cactus texture
-    Texture2D cactusTexture = LoadTexture("cactus.png");
+    // Initialize player
+	//Rectangle defining the area displayed from a sprite sheet
+    Rectangle current_frame_sheet = {0.0, 0.0, (float)buns_sprite.width / 3.0, (float)buns_sprite.height};
+	Rectangle buns_hitbox = {POSX, -buns_sprite.height, current_frame_sheet.width, current_frame_sheet.height};
+    Player buns = {0, 0, buns_hitbox, buns_sprite, JUMPING, 0, 6, 0, current_frame_sheet};
     
-    // Initialize obstacle
-    Obstacle obstacle;
-    float scrollSpeed = 400.0f;
-    InitializeObstacle(&obstacle, cactusTexture);
+    // Initialize scenery
+    InitializeCloud(clouds);
+    InitializeObstacle(&cactus, cactus_texture);
 
     // Game loop
     while (!WindowShouldClose()) {
@@ -35,12 +30,7 @@ int main() {
         UpdatePlayerAnim(&buns);
 
         // Update obstacle
-        UpdateObstacle(&obstacle, delta, scrollSpeed);
-
-        // Check if obstacle is off-screen and reinitialize
-        if (IsObstacleOffScreen(&obstacle)) {
-            InitializeObstacle(&obstacle, cactusTexture);
-        }
+        UpdateObstacle(&cactus, delta);
 
         // Drawing
         BeginDrawing();
@@ -49,14 +39,17 @@ int main() {
         UpdatePlayer(&buns);
 
         // Draw the obstacle
-        DrawTexture(obstacle.texture, obstacle.position.x, obstacle.position.y, WHITE);
+        DrawTexture(cactus.texture, cactus.position.x, cactus.position.y, WHITE);
 
         EndDrawing();
     }
 
     // Cleanup
     UnloadTexture(buns_sprite);
-    UnloadTexture(cactusTexture);
+    UnloadTexture(cactus_texture);
+	for (int i = 0; i < MAXCLOUDS; i++) {
+		UnloadTexture(clouds[i].sprite);
+	}
     CloseWindow();
 
     return 0;

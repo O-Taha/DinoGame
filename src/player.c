@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include "player.h"
+#include "utility.h"
 
 
 //Handles physics variables such as velocity and position
@@ -17,10 +18,11 @@ void UpdatePlayerPhysics(Player* player, float delta) {
 	}
 	//Jumping
 	if ((IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_UP)) & (player->state == RUNNING)) {
-		player->velocityY -= GRAVITY/1.2;
+		player->velocityY -= GRAVITY/1.3;
 		player->frame_speed *= 2;
 		player->state = JUMPING;
 	}
+	player->hitbox.x = player->posY;
 	return;
 }
 void UpdatePlayerAnim(Player *player) {

@@ -3,7 +3,6 @@
 #include "raylib.h"
 //Constants
 #define GRAVITY 1000
-#define GROUND_Y 600
 #define POSX 200
 
 typedef enum {
@@ -16,13 +15,14 @@ typedef enum {
 typedef struct {
 	float posY;
 	float velocityY;
+	Rectangle hitbox;
 	Texture sprite;
 	Player_state state;
+	//Animation components
 	int frame_counter; //Counter allowing for frame-changing, independently from FPS
 	int frame_speed; //Animation frames per second
 	int current_frame;
 	Rectangle frame_sheet;
-
 } Player;
 
 
