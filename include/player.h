@@ -1,8 +1,12 @@
 #ifndef PLAYER
 #define PLAYER
 #include "raylib.h"
-//Constants
-#define GRAVITY 1000
+
+//Variables & Constants
+#define GRAVITY 1000.0f
+#define INITIALJUMPFORCE 600.0f
+#define ADDJUMPFORCE 400.0f
+#define MAXJUMPTIME 2
 #define POSX 200
 
 typedef enum {

@@ -6,9 +6,7 @@
 #define SCREENHEIGHT 800
 #define GROUND_Y 600
 #define MAXCLOUDS 4
-
-#define CACTUSHEIGHT 10
-#define CACTUSWIDTH 5
+#define OBSTACLETYPES 5 //Number of distinct sprites used for obstacles
 
 //Global scope
 extern float global_velocity; //DO NOT CHANGE TO CONST : it will vary
@@ -31,7 +29,7 @@ typedef struct Obstacle {
     Texture2D texture;
     Rectangle hitbox;
 } Obstacle;
-extern Obstacle cactus;
+extern Obstacle hazard;
 
 
 void SetUpGame(); //Sets up environment
@@ -41,8 +39,8 @@ void UpdateCloudPhysics(Cloud* cloud, float delta);
 void DrawClouds(Cloud cloud[], float delta);
 
 
-void InitializeObstacle(Obstacle* obstacle, Texture2D Texture);
-void UpdateObstacle(Obstacle* obstacle, float deltaTime);
+void InitializeObstacle(Obstacle* obstacle, Texture Texture[]);
+void UpdateObstacle(Obstacle* obstacle, Texture obstacle_textures[], float deltaTime);
 
 
 void DrawScenery(float delta); //Draws ground, clouds

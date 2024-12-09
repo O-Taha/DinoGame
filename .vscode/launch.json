@@ -34,7 +34,7 @@
     },
     {
       "name": "Run",
-      "type": "cppdbg",
+      "type": "lldb",
       "request": "launch",
       "args": [],
       "stopAtEntry": false,

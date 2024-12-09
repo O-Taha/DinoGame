@@ -28,35 +28,59 @@ For a C++ project simply rename the file to .cpp and re-run the build script
 #include "utility.h" 
 #include "player.h"
 
+
 Game_state game_state = MENU;
 
 int main() {
-    // Initialize the game
+    // Initialize the game; among others:
+    //Sets "./resources" as working dir for texture loading;
+    //Caps at 60 FPS
+    //Window size : 1280 x 800
     SetUpGame();
 
     // Load sprites
-    Texture buns_sprite = LoadTexture("Buns_Spritesheet.png"); //Initializer element is not a compile-time constant : Needs to be initialized during Runtime (i.e. in a function)
-    Texture cactus_texture = LoadTexture("Cactus.png");
+    //Initializer element is not a compile-time constant: 
+    //Textures need to be initialized during Runtime (i.e. in a function)
+    Texture buns_sprite = LoadTexture("Buns_Spritesheet.png"); 
+
+    //Automatic sprite loading system!
+    Texture obstacle_sprites[OBSTACLETYPES];
+    FilePathList obstacle_paths = LoadDirectoryFiles("./Obstacles"); //Gets all the sprites from "./resources"
+    #ifdef DEBUG
+    TraceLog(LOG_INFO , "Found %d obstacle paths in directory: %s", obstacle_paths.count, "/resources/Obstacles");
+    #endif
+    for (int i = 0; i < obstacle_paths.count; i++) {
+        #ifdef DEBUG
+        TraceLog(LOG_INFO, "File %d: %s", i, GetFileName(obstacle_paths.paths[i]));
+        #endif
+        obstacle_sprites[i] = LoadTexture(obstacle_paths.paths[i]);
+    }
 
     // Initialize player
 	//Rectangle defining the area displayed from a sprite sheet
     Rectangle current_frame_sheet = {0.0, 0.0, (float)buns_sprite.width / 3.0, (float)buns_sprite.height};
 	Rectangle buns_hitbox = {POSX, -buns_sprite.height, current_frame_sheet.width, current_frame_sheet.height};
     Player buns = {0, 0, buns_hitbox, buns_sprite, JUMPING, 0, 6, 0, current_frame_sheet};
-    
+
+
     // Initialize scenery
     InitializeCloud(clouds);
-    InitializeObstacle(&cactus, cactus_texture);
+    InitializeObstacle(&hazard, obstacle_sprites);
 
     // Game loop
     while (!WindowShouldClose()) {
 
         float delta = GetFrameTime();
+
+        #ifdef DEBUG // Works because DinoGame.make already contains the -DDEBUG flag (which makes the preprocessor add "#define DEBUG")
+        //delta = 0.016; // Use a fixed delta during debugging.
+        #endif
+
         DrawScenery(delta);
 
         switch (game_state) {
 			case MENU:
-			DrawText("BUNS RUSH", SCREENWIDTH/2, SCREENHEIGHT/4, 50, BLACK);
+			DrawText("Buns Rush!", SCREENWIDTH/2, SCREENHEIGHT/4, 50, BLACK);
 			if (IsKeyPressed(KEY_SPACE)) game_state = GAME;
 			break;
 
@@ -66,7 +90,7 @@ int main() {
 			UpdatePlayerAnim(&buns);
             UpdatePlayer(&buns);
 
-            UpdateObstacle(&cactus, delta);
+            UpdateObstacle(&hazard, obstacle_sprites, delta);
 			break;
 
 			case GAMEOVER:
@@ -77,7 +101,7 @@ int main() {
         // Drawing
         BeginDrawing();
         ClearBackground(SKYBLUE);
-        DrawText("To do:\nFinishing hazards collisions\nSFX\nMusic", 200, 200, 20, BLACK);
+        DrawText("To do:\nFinishing hazards collisions\nSFX\nMusic\nPowerup", 200, 200, 20, BLACK);
 
 
         EndDrawing();
@@ -85,10 +109,13 @@ int main() {
 
     // Cleanup
     UnloadTexture(buns_sprite);
-    UnloadTexture(cactus_texture);
 	for (int i = 0; i < MAXCLOUDS; i++) {
 		UnloadTexture(clouds[i].sprite);
 	}
+    for (int i = 0; i < obstacle_paths.count; i++) {
+        UnloadTexture(obstacle_sprites[i]);
+    }
+    UnloadDirectoryFiles(obstacle_paths);
     CloseWindow();
 
     return 0;

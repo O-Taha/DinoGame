@@ -3,11 +3,10 @@
 #include "utility.h"
 
 
+float jump_time = 0;
+
 //Handles physics variables such as velocity and position
 void UpdatePlayerPhysics(Player* player, float delta) {
-	//Directly incrementing posY by gravity results in constant fall speed
-	player->velocityY += GRAVITY*delta;
-	player->posY += player->velocityY*delta;
 
 	//Ground reached
 	if (player->posY > GROUND_Y) {
@@ -17,14 +16,29 @@ void UpdatePlayerPhysics(Player* player, float delta) {
 		player->state = RUNNING;
 	}
 	//Jumping
-	if ((IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_UP)) & (player->state == RUNNING)) {
-		player->velocityY -= GRAVITY/1.3;
+	if ((IsKeyDown(KEY_SPACE) || IsKeyDown(KEY_UP)) && (player->state == RUNNING)) {
+		player->velocityY = -INITIALJUMPFORCE;
+		jump_time = 0;
 		player->frame_speed *= 2;
 		player->state = JUMPING;
 	}
-	player->hitbox.x = player->posY;
+	if ((IsKeyDown(KEY_SPACE) || IsKeyDown(KEY_UP)) && ((player->velocityY < 0) && (jump_time < MAXJUMPTIME))) player->velocityY -= ADDJUMPFORCE*delta;
+
+	jump_time += delta;
+	//Directly incrementing posY by gravity results in constant fall speed
+	player->velocityY += GRAVITY*delta;
+	player->posY += player->velocityY*delta;
+	//Ground reached
+	if (player->posY > GROUND_Y) {
+		player->velocityY = 0;
+		player->posY = GROUND_Y;
+		player->frame_speed = 6;
+		player->state = RUNNING;
+	}
 	return;
 }
+
+
 void UpdatePlayerAnim(Player *player) {
 	player->frame_counter++;
 

@@ -380,7 +380,7 @@ FodyWeavers.xsd
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
-!.vscode/launch.json
+.vscode/launch.json
 !.vscode/extensions.json
 *.code-workspace
 
@@ -403,4 +403,6 @@ raylib-master
 
 compile_commands.json
 /src/game
+build-MinGW-W64.bat
+build-VisualStudio2022.bat
 

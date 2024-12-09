@@ -1,4 +1,13 @@
-Changelog for all additions to the project :
+Changelog for all additions made by Taha to the project :
+
+09/12/24 :
+- Added debugging conditions (#ifdef DEBUG)
+- Finally added a somewhat working variable jump height
+
+06/12/24 :
+- Made new and bigger sprites
+- Added an automatic sprite loading system:
+    - All sprites in the ./resource/Obstacles dir are automatically loaded in memory and used for random obstacle generation
 
 03/12/24 :
 - Placeholder Menu and game states
