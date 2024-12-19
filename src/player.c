@@ -52,6 +52,19 @@ void UpdatePlayerAnim(Player *player) {
 
 //Handles actual on-screen positon and animation (as opposed to UpdatePlayerPhysics)
 void UpdatePlayer(Player *player) {
+	float deltaTime = GetFrameTime();
 	DrawTextureRec(player->sprite, player->frame_sheet, (Vector2){POSX, player->posY - player->sprite.height}, WHITE);
+    UpdatePlayerPhysics(player, deltaTime);
+    UpdatePlayerAnim(player);
+    UpdatePlayerHitbox(player);  // Add this line
 	return;
+}
+
+void UpdatePlayerHitbox(Player* player) {
+    player->hitbox = (Rectangle){
+        POSX + PLAYER_MARGIN_X,                          // X position with margin
+        player->posY - player->sprite.height + PLAYER_MARGIN_Y,  // Y position adjusted to match sprite
+        (float)player->sprite.width/3 - (PLAYER_MARGIN_X * 2),  // Width with margins
+        (float)player->sprite.height - (PLAYER_MARGIN_Y * 2)    // Height with margins
+    };
 }

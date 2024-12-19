@@ -28,40 +28,29 @@ For a C++ project simply rename the file to .cpp and re-run the build script
 #include "utility.h" 
 #include "player.h"
 
-
+bool showHitboxes = false;
 Game_state game_state = MENU;
+int score = 0;
+int highScore = 0;
 
 int main() {
     // Initialize the game; among others:
-    //Sets "./resources" as working dir for texture loading;
-    //Caps at 60 FPS
-    //Window size : 1280 x 800
     SetUpGame();
 
     // Load sprites
-    //Initializer element is not a compile-time constant: 
-    //Textures need to be initialized during Runtime (i.e. in a function)
-    Texture buns_sprite = LoadTexture("Buns_Spritesheet.png"); 
+    Texture buns_sprite = LoadTexture("Buns_Spritesheet.png");
 
-    //Automatic sprite loading system!
+    // Automatic sprite loading system
     Texture obstacle_sprites[OBSTACLETYPES];
-    FilePathList obstacle_paths = LoadDirectoryFiles("./Obstacles"); //Gets all the sprites from "./resources"
-    #ifdef DEBUG
-    TraceLog(LOG_INFO , "Found %d obstacle paths in directory: %s", obstacle_paths.count, "/resources/Obstacles");
-    #endif
+    FilePathList obstacle_paths = LoadDirectoryFiles("./Obstacles");
     for (int i = 0; i < obstacle_paths.count; i++) {
-        #ifdef DEBUG
-        TraceLog(LOG_INFO, "File %d: %s", i, GetFileName(obstacle_paths.paths[i]));
-        #endif
         obstacle_sprites[i] = LoadTexture(obstacle_paths.paths[i]);
     }
 
     // Initialize player
-	//Rectangle defining the area displayed from a sprite sheet
     Rectangle current_frame_sheet = {0.0, 0.0, (float)buns_sprite.width / 3.0, (float)buns_sprite.height};
-	Rectangle buns_hitbox = {POSX, -buns_sprite.height, current_frame_sheet.width, current_frame_sheet.height};
-    Player buns = {0, 0, buns_hitbox, buns_sprite, JUMPING, 0, 6, 0, current_frame_sheet};
-
+    Rectangle buns_hitbox = {POSX, GROUND_Y - buns_sprite.height, current_frame_sheet.width, current_frame_sheet.height};
+    Player buns = {0, GROUND_Y - buns_sprite.height, buns_hitbox, buns_sprite, JUMPING, 0, 6, 0, current_frame_sheet};
 
     // Initialize scenery
     InitializeCloud(clouds);
@@ -69,49 +58,79 @@ int main() {
 
     // Game loop
     while (!WindowShouldClose()) {
-
         float delta = GetFrameTime();
 
-        #ifdef DEBUG // Works because DinoGame.make already contains the -DDEBUG flag (which makes the preprocessor add "#define DEBUG")
-        //delta = 0.016; // Use a fixed delta during debugging.
-        #endif
+        // Toggle hitboxes with the H key (debug)
+        if (IsKeyPressed(KEY_H)) {
+            showHitboxes = !showHitboxes;
+        }
 
-        DrawScenery(delta);
-
-        switch (game_state) {
-			case MENU:
-			DrawText("Buns Rush!", SCREENWIDTH/2, SCREENHEIGHT/4, 50, BLACK);
-			if (IsKeyPressed(KEY_SPACE)) game_state = GAME;
-			break;
-
-			case GAME:
-			
-			UpdatePlayerPhysics(&buns, delta);
-			UpdatePlayerAnim(&buns);
-            UpdatePlayer(&buns);
-
-            UpdateObstacle(&hazard, obstacle_sprites, delta);
-			break;
-
-			case GAMEOVER:
-			break;
-		
-		}
-
-        // Drawing
         BeginDrawing();
         ClearBackground(SKYBLUE);
-        DrawText("To do:\nFinishing hazards collisions\nSFX\nMusic\nPowerup", 200, 200, 20, BLACK);
 
+        switch (game_state) {
+            case MENU:
+                DrawText("Buns Rush!", SCREENWIDTH / 2 - MeasureText("Buns Rush!", 50) / 2, SCREENHEIGHT / 4, 50, BLACK);
+                DrawText("Press SPACE to start", SCREENWIDTH / 2 - MeasureText("Press SPACE to start", 30) / 2, SCREENHEIGHT / 2, 30, BLACK);
+                if (IsKeyPressed(KEY_SPACE)) {
+                    game_state = GAME;
+                }
+                break;
+
+            case GAME:
+                DrawScenery(delta);
+
+                UpdatePlayerPhysics(&buns, delta);
+                UpdatePlayerAnim(&buns);
+                UpdatePlayer(&buns);
+                UpdateObstacle(&hazard, obstacle_sprites, delta);
+
+                // Update score (increase by 1 point every second)
+                score += (int)(60 * delta);
+                DrawText(TextFormat("Score: %d", score), 20, 20, 30, BLACK);
+                DrawText(TextFormat("High Score: %d", highScore), 20, 60, 20, BLACK);
+
+                if (CheckCollisionRecs(buns.hitbox, hazard.hitbox)) {
+                    buns.state = DEAD;
+                    if (score > highScore) {
+                        highScore = score;
+                    }
+                    game_state = GAMEOVER;
+                }
+
+                if (showHitboxes) {
+                    DrawRectangleLines(buns.hitbox.x, buns.hitbox.y, buns.hitbox.width, buns.hitbox.height, RED);
+                    if (hazard.active) {
+                        DrawRectangleLines(hazard.hitbox.x, hazard.hitbox.y, hazard.hitbox.width, hazard.hitbox.height, RED);
+                    }
+                }
+                break;
+
+            case GAMEOVER:
+                DrawText("Game Over!", SCREENWIDTH / 2 - MeasureText("Game Over!", 50) / 2, SCREENHEIGHT / 3, 50, BLACK);
+                DrawText(TextFormat("Final Score: %d", score), SCREENWIDTH / 2 - MeasureText(TextFormat("Final Score: %d", score), 40) / 2, SCREENHEIGHT / 3 + 70, 40, BLACK);
+                DrawText(TextFormat("High Score: %d", highScore), SCREENWIDTH / 2 - MeasureText(TextFormat("High Score: %d", highScore), 30) / 2, SCREENHEIGHT / 3 + 120, 30, BLACK);
+                DrawText("\n Press SPACE to restart", SCREENWIDTH / 2 - MeasureText("\n Press SPACE to restart", 30) / 2, SCREENHEIGHT / 2, 30, BLACK);
+
+                if (IsKeyPressed(KEY_SPACE)) {
+                    game_state = MENU;
+                    buns.state = JUMPING;
+                    buns.posY = GROUND_Y - buns.sprite.height;
+                    buns.velocityY = 0;
+                    score = 0;
+                    InitializeObstacle(&hazard, obstacle_sprites);
+                }
+                break;
+        }
 
         EndDrawing();
     }
 
     // Cleanup
     UnloadTexture(buns_sprite);
-	for (int i = 0; i < MAXCLOUDS; i++) {
-		UnloadTexture(clouds[i].sprite);
-	}
+    for (int i = 0; i < MAXCLOUDS; i++) {
+        UnloadTexture(clouds[i].sprite);
+    }
     for (int i = 0; i < obstacle_paths.count; i++) {
         UnloadTexture(obstacle_sprites[i]);
     }

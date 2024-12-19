@@ -9,6 +9,7 @@ float cloud_velocity = 10;
 Cloud clouds[MAXCLOUDS];
 Obstacle hazard;
 
+
 //Sets up environment
 void SetUpGame() {
 	// Tell the window to use vysnc and work on high DPI displays
@@ -53,23 +54,38 @@ void DrawClouds(Cloud* cloud_arr, float delta) {
 }
 
 void InitializeObstacle(Obstacle* obstacle, Texture obstacle_textures[]) {
-    // Set the obstacle texture
     obstacle->texture = obstacle_textures[GetRandomValue(0, OBSTACLETYPES-1)];
-	obstacle->hitbox = (Rectangle){SCREENWIDTH, GROUND_Y - obstacle->texture.height, obstacle->texture.width, obstacle->texture.height};
-    // Position the obstacle off-screen to the far right, aligned with the ground
     obstacle->position = (Vector2){
-        SCREENWIDTH,  // Spawn off-screen to the right (same as clouds)
-        GROUND_Y - obstacle->texture.height // Align the bottom of the obstacle with the ground
+        SCREENWIDTH,
+        GROUND_Y - obstacle->texture.height
     };
+    obstacle->hitbox = (Rectangle){
+        obstacle->position.x + OBSTACLE_MARGIN_X,
+        obstacle->position.y + OBSTACLE_MARGIN_Y,
+        obstacle->texture.width - (2 * OBSTACLE_MARGIN_X),
+        obstacle->texture.height - (2 * OBSTACLE_MARGIN_Y)
+    };
+    obstacle->active = true;  // Add this line
 }
 
 
 void UpdateObstacle(Obstacle* obstacle, Texture obstacle_textures[], float delta) {
-    obstacle->position.x -= global_velocity * delta; // Update hitbox position
-    obstacle->hitbox.x = obstacle->position.x;
-	obstacle->hitbox.y = obstacle->position.y;
-	if (obstacle->position.x + obstacle->texture.width < 0) {
-		InitializeObstacle(obstacle, obstacle_textures);
+    obstacle->position.x -= global_velocity * delta;
+    UpdateObstacleHitbox(obstacle);  // Add this line
+    
+    if (obstacle->position.x + obstacle->texture.width < 0) {
+        InitializeObstacle(obstacle, obstacle_textures);
+    }
+}
+
+void UpdateObstacleHitbox(Obstacle* obstacle) {
+    if (obstacle->active) {
+        obstacle->hitbox = (Rectangle){
+            obstacle->position.x + OBSTACLE_MARGIN_X,
+            obstacle->position.y + OBSTACLE_MARGIN_Y,
+            obstacle->texture.width - (2 * OBSTACLE_MARGIN_X),
+            obstacle->texture.height - (2 * OBSTACLE_MARGIN_Y)
+        };
     }
 }
 
@@ -77,5 +93,5 @@ void UpdateObstacle(Obstacle* obstacle, Texture obstacle_textures[], float delta
 void DrawScenery(float delta) {
 	DrawLine(0, GROUND_Y, SCREENWIDTH, GROUND_Y, BLACK);
 	DrawClouds(clouds, delta);
-	if (game_state == GAME) DrawTexture(hazard.texture, hazard.position.x, hazard.position.y, WHITE);;
+	if (game_state == GAME) DrawTexture(hazard.texture, hazard.position.x, hazard.position.y, WHITE);
 }
