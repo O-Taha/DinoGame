@@ -4,10 +4,12 @@
 
 
 //Initialising variables
-float global_velocity = 400.0f;
+float global_velocity = 500.0f;
 float cloud_velocity = 10;
 Cloud clouds[MAXCLOUDS];
 Obstacle hazard;
+float fgpos = 0;
+float fgpos2 = SCREENWIDTH;
 
 
 //Sets up environment
@@ -61,17 +63,17 @@ void InitializeObstacle(Obstacle* obstacle, Texture obstacle_textures[]) {
     };
     obstacle->hitbox = (Rectangle){
         obstacle->position.x + OBSTACLE_MARGIN_X,
-        obstacle->position.y + OBSTACLE_MARGIN_Y,
-        obstacle->texture.width - (2 * OBSTACLE_MARGIN_X),
-        obstacle->texture.height - (2 * OBSTACLE_MARGIN_Y)
+        obstacle->position.y,
+        obstacle->texture.width,
+        obstacle->texture.height
     };
-    obstacle->active = true;  // Add this line
+    obstacle->active = true;
 }
 
 
 void UpdateObstacle(Obstacle* obstacle, Texture obstacle_textures[], float delta) {
     obstacle->position.x -= global_velocity * delta;
-    UpdateObstacleHitbox(obstacle);  // Add this line
+    UpdateObstacleHitbox(obstacle);
     
     if (obstacle->position.x + obstacle->texture.width < 0) {
         InitializeObstacle(obstacle, obstacle_textures);
@@ -80,18 +82,32 @@ void UpdateObstacle(Obstacle* obstacle, Texture obstacle_textures[], float delta
 
 void UpdateObstacleHitbox(Obstacle* obstacle) {
     if (obstacle->active) {
-        obstacle->hitbox = (Rectangle){
+        obstacle->hitbox  = (Rectangle){
             obstacle->position.x + OBSTACLE_MARGIN_X,
-            obstacle->position.y + OBSTACLE_MARGIN_Y,
-            obstacle->texture.width - (2 * OBSTACLE_MARGIN_X),
-            obstacle->texture.height - (2 * OBSTACLE_MARGIN_Y)
+            obstacle->position.y,
+            obstacle->texture.width,
+            obstacle->texture.height
         };
     }
 }
 
+void UpdateBackgrounds(float delta) {
+    fgpos -= global_velocity * delta;
+    if (fgpos <= -SCREENWIDTH) fgpos = SCREENWIDTH;
+    fgpos2 -= global_velocity * delta;
+    if (fgpos2 <= -SCREENWIDTH) fgpos2 = SCREENWIDTH;
+    return;
+}
+
 //Draws ground, clouds
-void DrawScenery(float delta) {
-	DrawLine(0, GROUND_Y, SCREENWIDTH, GROUND_Y, BLACK);
-	DrawClouds(clouds, delta);
-	if (game_state == GAME) DrawTexture(hazard.texture, hazard.position.x, hazard.position.y, WHITE);
+void DrawScenery(Texture foreground, Texture background, float delta) {
+    UpdateBackgrounds(delta);
+    DrawTexture(background, fgpos, 0, WHITE);
+    DrawTexture(background, fgpos2, 0, WHITE);
+    DrawTexture(foreground, fgpos, 0, WHITE);
+    DrawTexture(foreground, fgpos2, 0, WHITE);
+    DrawClouds(clouds, delta);
+	if (game_state == GAME) {
+        DrawTexture(hazard.texture, hazard.position.x, hazard.position.y, WHITE);
+    }
 }

@@ -4,12 +4,10 @@
 
 //Variables & Constants
 #define GRAVITY 1000.0f
-#define INITIALJUMPFORCE 600.0f
+#define INITIALJUMPFORCE 700.0f
 #define ADDJUMPFORCE 400.0f
 #define MAXJUMPTIME 2
 #define POSX 200
-#define PLAYER_MARGIN_X 20     // Reduces player hitbox width by 20px on each side
-#define PLAYER_MARGIN_Y 10     // Reduces player hitbox height by 10px top and bottom
 
 extern bool showHitboxes;    // Just declare it
 
@@ -35,9 +33,9 @@ typedef struct {
 
 
 //Handles physics variables such as velocity and position
-void UpdatePlayerPhysics(Player *player, float delta);
+void UpdatePlayerPhysics(Player *player, float delta, Sound jump_sound);
 void UpdatePlayerAnim(Player *player);
 //Handles actual on-screen positon and animation (as opposed to UpdatePlayerPhysics)
-void UpdatePlayer(Player *player); 
+void UpdatePlayer(Player *player, Sound jump_sound); 
 void UpdatePlayerHitbox(Player* player);
 #endif

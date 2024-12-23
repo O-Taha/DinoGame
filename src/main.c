@@ -27,18 +27,27 @@ For a C++ project simply rename the file to .cpp and re-run the build script
 #include "raylib.h"
 #include "utility.h" 
 #include "player.h"
+#include <stdbool.h>
 
+// Toggle hitboxes with the H key (debug)
 bool showHitboxes = false;
 Game_state game_state = MENU;
 int score = 0;
 int highScore = 0;
 
 int main() {
-    // Initialize the game; among others:
+    // Initialize the game; among others
     SetUpGame();
+    InitAudioDevice();
 
-    // Load sprites
-    Texture buns_sprite = LoadTexture("Buns_Spritesheet.png");
+    // Loading assets
+    Texture buns_sprite =  LoadTexture("Buns_Spritesheet.png");
+    Texture FG = LoadTexture("CityFG.png");
+    Texture BG = LoadTexture("CityBG.png");
+    Sound music_intro = LoadSound("NES_Shooter_Music_by_SketchyLogic/BossIntro.wav");
+    Sound jump_sound = LoadSound("SFX/Jump.wav");
+    Music music = LoadMusicStream("NES_Shooter_Music_by_SketchyLogic/BossMain.wav");
+    PlayMusicStream(music);
 
     // Automatic sprite loading system
     Texture obstacle_sprites[OBSTACLETYPES];
@@ -60,29 +69,28 @@ int main() {
     while (!WindowShouldClose()) {
         float delta = GetFrameTime();
 
-        // Toggle hitboxes with the H key (debug)
+
         if (IsKeyPressed(KEY_H)) {
             showHitboxes = !showHitboxes;
         }
 
         BeginDrawing();
         ClearBackground(SKYBLUE);
+        DrawScenery(FG, BG, delta);
 
         switch (game_state) {
             case MENU:
                 DrawText("Buns Rush!", SCREENWIDTH / 2 - MeasureText("Buns Rush!", 50) / 2, SCREENHEIGHT / 4, 50, BLACK);
                 DrawText("Press SPACE to start", SCREENWIDTH / 2 - MeasureText("Press SPACE to start", 30) / 2, SCREENHEIGHT / 2, 30, BLACK);
                 if (IsKeyPressed(KEY_SPACE)) {
+                    if (!highScore) PlaySound(music_intro); //Play the intro music only if it's the first time!
                     game_state = GAME;
                 }
                 break;
 
             case GAME:
-                DrawScenery(delta);
-
-                UpdatePlayerPhysics(&buns, delta);
-                UpdatePlayerAnim(&buns);
-                UpdatePlayer(&buns);
+                if (!IsSoundPlaying(music_intro)) UpdateMusicStream(music);
+                UpdatePlayer(&buns, jump_sound);
                 UpdateObstacle(&hazard, obstacle_sprites, delta);
 
                 // Update score (increase by 1 point every second)
@@ -100,9 +108,7 @@ int main() {
 
                 if (showHitboxes) {
                     DrawRectangleLines(buns.hitbox.x, buns.hitbox.y, buns.hitbox.width, buns.hitbox.height, RED);
-                    if (hazard.active) {
-                        DrawRectangleLines(hazard.hitbox.x, hazard.hitbox.y, hazard.hitbox.width, hazard.hitbox.height, RED);
-                    }
+                    DrawRectangleLines(hazard.hitbox.x, hazard.hitbox.y, hazard.hitbox.width, hazard.hitbox.height, RED);
                 }
                 break;
 
@@ -135,6 +141,9 @@ int main() {
         UnloadTexture(obstacle_sprites[i]);
     }
     UnloadDirectoryFiles(obstacle_paths);
+    UnloadMusicStream(music);
+    UnloadSound(music_intro);
+    CloseAudioDevice();
     CloseWindow();
 
     return 0;

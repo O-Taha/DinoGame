@@ -6,9 +6,9 @@
 float jump_time = 0;
 
 //Handles physics variables such as velocity and position
-void UpdatePlayerPhysics(Player* player, float delta) {
+void UpdatePlayerPhysics(Player* player, float delta, Sound jump_sound) {
 
-	//Ground reached
+	//Ground reached (Checking twice to avoid going underground)
 	if (player->posY > GROUND_Y) {
 		player->velocityY = 0;
 		player->posY = GROUND_Y;
@@ -17,6 +17,8 @@ void UpdatePlayerPhysics(Player* player, float delta) {
 	}
 	//Jumping
 	if ((IsKeyDown(KEY_SPACE) || IsKeyDown(KEY_UP)) && (player->state == RUNNING)) {
+		SetSoundPitch(jump_sound, GetRandomValue(1, 4));
+		PlaySound(jump_sound);
 		player->velocityY = -INITIALJUMPFORCE;
 		jump_time = 0;
 		player->frame_speed *= 2;
@@ -51,20 +53,21 @@ void UpdatePlayerAnim(Player *player) {
 }
 
 //Handles actual on-screen positon and animation (as opposed to UpdatePlayerPhysics)
-void UpdatePlayer(Player *player) {
+void UpdatePlayer(Player *player, Sound jump_sound) {
 	float deltaTime = GetFrameTime();
 	DrawTextureRec(player->sprite, player->frame_sheet, (Vector2){POSX, player->posY - player->sprite.height}, WHITE);
-    UpdatePlayerPhysics(player, deltaTime);
+    UpdatePlayerPhysics(player, deltaTime, jump_sound);
     UpdatePlayerAnim(player);
-    UpdatePlayerHitbox(player);  // Add this line
+    UpdatePlayerHitbox(player);
 	return;
 }
 
 void UpdatePlayerHitbox(Player* player) {
     player->hitbox = (Rectangle){
-        POSX + PLAYER_MARGIN_X,                          // X position with margin
-        player->posY - player->sprite.height + PLAYER_MARGIN_Y,  // Y position adjusted to match sprite
-        (float)player->sprite.width/3 - (PLAYER_MARGIN_X * 2),  // Width with margins
-        (float)player->sprite.height - (PLAYER_MARGIN_Y * 2)    // Height with margins
+        POSX,
+        player->posY - player->sprite.height,
+        (float)player->sprite.width/3,
+        (float)player->sprite.height
     };
+	return;
 }
