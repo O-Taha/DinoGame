@@ -17,7 +17,7 @@ extern Game_state game_state;
 extern bool showHitboxes;
 extern int score;
 extern int highScore;
-extern float fgpos, fgpos2;
+extern float fgpos, fgpos2, bgpos, bgpos2;
 
 //Scenery types and components
 typedef struct {

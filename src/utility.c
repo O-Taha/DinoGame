@@ -10,6 +10,8 @@ Cloud clouds[MAXCLOUDS];
 Obstacle hazard;
 float fgpos = 0;
 float fgpos2 = SCREENWIDTH;
+float bgpos = 0;
+float bgpos2 = SCREENWIDTH;
 
 
 //Sets up environment
@@ -96,14 +98,19 @@ void UpdateBackgrounds(float delta) {
     if (fgpos <= -SCREENWIDTH) fgpos = SCREENWIDTH;
     fgpos2 -= global_velocity * delta;
     if (fgpos2 <= -SCREENWIDTH) fgpos2 = SCREENWIDTH;
+
+    bgpos -= global_velocity/2 * delta;
+    if (bgpos <= -SCREENWIDTH) bgpos = SCREENWIDTH;
+    bgpos2 -= global_velocity/2 * delta;
+    if (bgpos2 <= -SCREENWIDTH) bgpos2 = SCREENWIDTH;
     return;
 }
 
 //Draws ground, clouds
 void DrawScenery(Texture foreground, Texture background, float delta) {
     UpdateBackgrounds(delta);
-    DrawTexture(background, fgpos, 0, WHITE);
-    DrawTexture(background, fgpos2, 0, WHITE);
+    DrawTexture(background, bgpos, 0, WHITE);
+    DrawTexture(background, bgpos2, 0, WHITE);
     DrawTexture(foreground, fgpos, 0, WHITE);
     DrawTexture(foreground, fgpos2, 0, WHITE);
     DrawClouds(clouds, delta);
