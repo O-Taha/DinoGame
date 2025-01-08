@@ -44,10 +44,15 @@ int main() {
     Texture buns_sprite =  LoadTexture("Buns_Spritesheet.png");
     Texture FG = LoadTexture("CityFG.png");
     Texture BG = LoadTexture("CityBG.png");
-    Sound music_intro = LoadSound("NES_Shooter_Music_by_SketchyLogic/BossIntro.wav");
+    Sound music_intro = LoadSound("Music/NES_Shooter_Music_by_SketchyLogic_BossIntro.wav");
+    Music title_screen_music = LoadMusicStream("Music/my_street_by_congusbongus.wav");
+    Music bg_music = LoadMusicStream("Music/NES_Shooter_Music_by_SketchyLogic_BossMain.wav");
+    Music game_over_music = LoadMusicStream("Music/two_left_socks_by_congusbongus.wav");
     Sound jump_sound = LoadSound("SFX/Jump.wav");
-    Music music = LoadMusicStream("NES_Shooter_Music_by_SketchyLogic/BossMain.wav");
-    PlayMusicStream(music);
+    Sound death_sound = LoadSound("SFX/hitHurt.wav");
+    PlayMusicStream(title_screen_music);
+    PlayMusicStream(bg_music);
+    PlayMusicStream(game_over_music);
 
     // Automatic sprite loading system
     Texture obstacle_sprites[OBSTACLETYPES];
@@ -68,28 +73,30 @@ int main() {
     // Game loop
     while (!WindowShouldClose()) {
         float delta = GetFrameTime();
-
-
         if (IsKeyPressed(KEY_H)) {
             showHitboxes = !showHitboxes;
         }
 
         BeginDrawing();
         ClearBackground(SKYBLUE);
-        DrawScenery(FG, BG, delta);
+        if (!(IsWindowHidden() || IsWindowMinimized() || !IsWindowFocused())) DrawScenery(FG, BG, delta); //When not focused, bugs related to music and delta are avoided by skipping computation
+
 
         switch (game_state) {
             case MENU:
                 DrawText("Buns Rush!", SCREENWIDTH / 2 - MeasureText("Buns Rush!", 50) / 2, SCREENHEIGHT / 4, 50, BLACK);
                 DrawText("Press SPACE to start", SCREENWIDTH / 2 - MeasureText("Press SPACE to start", 30) / 2, SCREENHEIGHT / 2, 30, BLACK);
+                UpdateMusicStream(title_screen_music);
+
                 if (IsKeyPressed(KEY_SPACE)) {
                     if (!highScore) PlaySound(music_intro); //Play the intro music only if it's the first time!
                     game_state = GAME;
+                    UnloadMusicStream(title_screen_music);
                 }
                 break;
 
             case GAME:
-                if (!IsSoundPlaying(music_intro)) UpdateMusicStream(music);
+                if (!IsSoundPlaying(music_intro)) UpdateMusicStream(bg_music);
                 UpdatePlayer(&buns, jump_sound);
                 UpdateObstacle(&hazard, obstacle_sprites, delta);
 
@@ -104,6 +111,8 @@ int main() {
                         highScore = score;
                     }
                     game_state = GAMEOVER;
+                    PlaySound(death_sound);
+                    SeekMusicStream(game_over_music, 0.0);
                 }
 
                 if (showHitboxes) {
@@ -116,10 +125,10 @@ int main() {
                 DrawText("Game Over!", SCREENWIDTH / 2 - MeasureText("Game Over!", 50) / 2, SCREENHEIGHT / 3, 50, BLACK);
                 DrawText(TextFormat("Final Score: %d", score), SCREENWIDTH / 2 - MeasureText(TextFormat("Final Score: %d", score), 40) / 2, SCREENHEIGHT / 3 + 70, 40, BLACK);
                 DrawText(TextFormat("High Score: %d", highScore), SCREENWIDTH / 2 - MeasureText(TextFormat("High Score: %d", highScore), 30) / 2, SCREENHEIGHT / 3 + 120, 30, BLACK);
-                DrawText("\n Press SPACE to restart", SCREENWIDTH / 2 - MeasureText("\n Press SPACE to restart", 30) / 2, SCREENHEIGHT / 2, 30, BLACK);
-
+                DrawText("\n Press SPACE to restart\n     Press ESC to quit", SCREENWIDTH / 2 - MeasureText("\n Press SPACE to restart", 30) / 2, SCREENHEIGHT / 2, 30, BLACK);
+                UpdateMusicStream(game_over_music);
                 if (IsKeyPressed(KEY_SPACE)) {
-                    game_state = MENU;
+                    game_state = GAME;
                     buns.state = JUMPING;
                     buns.posY = GROUND_Y - buns.sprite.height;
                     buns.velocityY = 0;
@@ -127,6 +136,7 @@ int main() {
                     InitializeObstacle(&hazard, obstacle_sprites);
                 }
                 break;
+            
         }
 
         EndDrawing();
@@ -141,8 +151,11 @@ int main() {
         UnloadTexture(obstacle_sprites[i]);
     }
     UnloadDirectoryFiles(obstacle_paths);
-    UnloadMusicStream(music);
     UnloadSound(music_intro);
+    UnloadMusicStream(bg_music);
+    UnloadMusicStream(game_over_music);
+    UnloadSound(jump_sound);
+    UnloadSound(death_sound);
     CloseAudioDevice();
     CloseWindow();
 
