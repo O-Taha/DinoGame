@@ -52,16 +52,6 @@ void UpdatePlayerAnim(Player *player) {
 	}
 }
 
-//Handles actual on-screen positon and animation (as opposed to UpdatePlayerPhysics)
-void UpdatePlayer(Player *player, Sound jump_sound) {
-	float deltaTime = GetFrameTime();
-	DrawTextureRec(player->sprite, player->frame_sheet, (Vector2){POSX, player->posY - player->sprite.height}, WHITE);
-    UpdatePlayerPhysics(player, deltaTime, jump_sound);
-    UpdatePlayerAnim(player);
-    UpdatePlayerHitbox(player);
-	return;
-}
-
 void UpdatePlayerHitbox(Player* player) {
     player->hitbox = (Rectangle){
         POSX,
@@ -69,5 +59,15 @@ void UpdatePlayerHitbox(Player* player) {
         (float)player->sprite.width/3,
         (float)player->sprite.height
     };
+	return;
+}
+
+//Handles actual on-screen positon and animation (as opposed to UpdatePlayerPhysics)
+void UpdatePlayer(Player *player, Sound jump_sound) {
+	float deltaTime = GetFrameTime();
+	DrawTextureRec(player->sprite, player->frame_sheet, (Vector2){POSX, player->posY - player->sprite.height}, WHITE);
+    UpdatePlayerPhysics(player, deltaTime, jump_sound);
+    UpdatePlayerAnim(player);
+    UpdatePlayerHitbox(player);
 	return;
 }

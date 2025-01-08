@@ -33,6 +33,8 @@ For a C++ project simply rename the file to .cpp and re-run the build script
 bool showHitboxes = false;
 Game_state game_state = MENU;
 int score = 0;
+int increment_counter = 0;
+int increment_counter2 = 0;
 int highScore = 0;
 
 int main() {
@@ -44,6 +46,7 @@ int main() {
     Texture buns_sprite =  LoadTexture("Buns_Spritesheet.png");
     Texture FG = LoadTexture("CityFG.png");
     Texture BG = LoadTexture("CityBG.png");
+    Texture game_over_screen = LoadTexture("GameOverScreen1.png");
     Sound music_intro = LoadSound("Music/NES_Shooter_Music_by_SketchyLogic_BossIntro.wav");
     Music title_screen_music = LoadMusicStream("Music/my_street_by_congusbongus.wav");
     Music bg_music = LoadMusicStream("Music/NES_Shooter_Music_by_SketchyLogic_BossMain.wav");
@@ -85,7 +88,7 @@ int main() {
         switch (game_state) {
             case MENU:
                 DrawText("Buns Rush!", SCREENWIDTH / 2 - MeasureText("Buns Rush!", 50) / 2, SCREENHEIGHT / 4, 50, BLACK);
-                DrawText("Press SPACE to start", SCREENWIDTH / 2 - MeasureText("Press SPACE to start", 30) / 2, SCREENHEIGHT / 2, 30, BLACK);
+                DrawText("Press SPACE to start\n   Press ESC to quit", SCREENWIDTH / 2 - MeasureText("Press SPACE to start", 30) / 2, SCREENHEIGHT / 2, 30, BLACK);
                 UpdateMusicStream(title_screen_music);
 
                 if (IsKeyPressed(KEY_SPACE)) {
@@ -101,7 +104,17 @@ int main() {
                 UpdateObstacle(&hazard, obstacle_sprites, delta);
 
                 // Update score (increase by 1 point every second)
-                score += (int)(60 * delta);
+                increment_counter++;
+                increment_counter2++;
+                if (increment_counter >= 1*60) {
+                    score += 1;
+                    increment_counter = 0;
+                }
+                if (increment_counter2 >= 5*60 && global_velocity < 800) { // Speed increases every 5 sec
+                    increment_counter2 = 0;
+                    global_velocity += 50;
+                }
+
                 DrawText(TextFormat("Score: %d", score), 20, 20, 30, BLACK);
                 DrawText(TextFormat("High Score: %d", highScore), 20, 60, 20, BLACK);
 
@@ -113,6 +126,7 @@ int main() {
                     game_state = GAMEOVER;
                     PlaySound(death_sound);
                     SeekMusicStream(game_over_music, 0.0);
+                    global_velocity = 500.0f;
                 }
 
                 if (showHitboxes) {
@@ -122,10 +136,11 @@ int main() {
                 break;
 
             case GAMEOVER:
-                DrawText("Game Over!", SCREENWIDTH / 2 - MeasureText("Game Over!", 50) / 2, SCREENHEIGHT / 3, 50, BLACK);
-                DrawText(TextFormat("Final Score: %d", score), SCREENWIDTH / 2 - MeasureText(TextFormat("Final Score: %d", score), 40) / 2, SCREENHEIGHT / 3 + 70, 40, BLACK);
-                DrawText(TextFormat("High Score: %d", highScore), SCREENWIDTH / 2 - MeasureText(TextFormat("High Score: %d", highScore), 30) / 2, SCREENHEIGHT / 3 + 120, 30, BLACK);
-                DrawText("\n Press SPACE to restart\n     Press ESC to quit", SCREENWIDTH / 2 - MeasureText("\n Press SPACE to restart", 30) / 2, SCREENHEIGHT / 2, 30, BLACK);
+                DrawTexture(game_over_screen, 0, 0, WHITE);
+                DrawText("Game Over!", SCREENWIDTH / 2 - MeasureText("Game Over!", 50) / 2, SCREENHEIGHT / 3, 50, WHITE);
+                DrawText(TextFormat("Final Score: %d", score), SCREENWIDTH / 2 - MeasureText(TextFormat("Final Score: %d", score), 40) / 2, SCREENHEIGHT / 3 + 70, 40, WHITE);
+                DrawText(TextFormat("High Score: %d", highScore), SCREENWIDTH / 2 - MeasureText(TextFormat("High Score: %d", highScore), 30) / 2, SCREENHEIGHT / 3 + 120, 30, WHITE);
+                DrawText("\n Press SPACE to restart\n     Press ESC to quit", SCREENWIDTH / 2 - MeasureText("\n Press SPACE to restart", 30) / 2, SCREENHEIGHT / 2 +10, 30, WHITE);
                 UpdateMusicStream(game_over_music);
                 if (IsKeyPressed(KEY_SPACE)) {
                     game_state = GAME;
@@ -151,6 +166,7 @@ int main() {
         UnloadTexture(obstacle_sprites[i]);
     }
     UnloadDirectoryFiles(obstacle_paths);
+    UnloadTexture(game_over_screen);
     UnloadSound(music_intro);
     UnloadMusicStream(bg_music);
     UnloadMusicStream(game_over_music);
