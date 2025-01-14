@@ -53,6 +53,8 @@ int main() {
     Music game_over_music = LoadMusicStream("Music/two_left_socks_by_congusbongus.wav");
     Sound jump_sound = LoadSound("SFX/Jump.wav");
     Sound death_sound = LoadSound("SFX/hitHurt.wav");
+    Image icon = LoadImage("Obstacles/TrafficLights.png");
+    SetWindowIcon(icon);
     PlayMusicStream(title_screen_music);
     PlayMusicStream(bg_music);
     PlayMusicStream(game_over_music);
@@ -103,14 +105,14 @@ int main() {
                 UpdatePlayer(&buns, jump_sound);
                 UpdateObstacle(&hazard, obstacle_sprites, delta);
 
-                // Update score (increase by 1 point every second)
+                // Update score (increase by 1 point every half-second)
                 increment_counter++;
                 increment_counter2++;
-                if (increment_counter >= 1*60) {
+                if (increment_counter >= 30) {
                     score += 1;
                     increment_counter = 0;
                 }
-                if (increment_counter2 >= 5*60 && global_velocity < 800) { // Speed increases every 5 sec
+                if (increment_counter2 >= 5*60 && global_velocity < 750) { // Speed increases every 5 sec
                     increment_counter2 = 0;
                     global_velocity += 50;
                 }
@@ -174,6 +176,7 @@ int main() {
     UnloadSound(death_sound);
     CloseAudioDevice();
     CloseWindow();
+    UnloadImage(icon);
 
     return 0;
 }

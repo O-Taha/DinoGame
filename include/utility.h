@@ -15,9 +15,8 @@ extern float global_velocity; //DO NOT CHANGE TO CONST : it will vary
 typedef enum _Game_state {MENU, GAME, GAMEOVER} Game_state;
 extern Game_state game_state;
 extern bool showHitboxes;
-extern int score;
-extern int highScore;
-extern float fgpos, fgpos2, bgpos, bgpos2;
+extern int score, highScore;
+extern float fgpos, bgpos;
 
 //Scenery types and components
 typedef struct {
@@ -50,6 +49,6 @@ void InitializeObstacle(Obstacle* obstacle, Texture Texture[]);
 void UpdateObstacle(Obstacle* obstacle, Texture obstacle_textures[], float deltaTime);
 void UpdateObstacleHitbox(Obstacle* obstacle);
 
-void DrawScenery(Texture foreground, Texture background, float delta); //Draws ground, clouds
+void DrawScenery(Texture foreground, Texture background, float delta); //Draws ground, clouds, ...
 
 #endif

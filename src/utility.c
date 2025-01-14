@@ -9,19 +9,17 @@ float cloud_velocity = 10;
 Cloud clouds[MAXCLOUDS];
 Obstacle hazard;
 float fgpos = 0;
-float fgpos2 = SCREENWIDTH;
 float bgpos = 0;
-float bgpos2 = SCREENWIDTH;
 
 
 //Sets up environment
 void SetUpGame() {
 	// Tell the window to use vysnc and work on high DPI displays
 	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
+	SearchAndSetResourceDir("resources");
 	// Create the window and OpenGL context
 	InitWindow(SCREENWIDTH, SCREENHEIGHT, "Buns Rush!");
 	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
-	SearchAndSetResourceDir("resources");
 	SetTargetFPS(60);
 	return;
 }
@@ -95,14 +93,9 @@ void UpdateObstacleHitbox(Obstacle* obstacle) {
 
 void UpdateBackgrounds(float delta) {
     fgpos -= global_velocity * delta;
-    if (fgpos <= -SCREENWIDTH) fgpos = SCREENWIDTH;
-    fgpos2 -= global_velocity * delta;
-    if (fgpos2 <= -SCREENWIDTH) fgpos2 = SCREENWIDTH;
-
+    if (fgpos <= -SCREENWIDTH) fgpos = 0;
     bgpos -= global_velocity/2 * delta;
-    if (bgpos <= -SCREENWIDTH) bgpos = SCREENWIDTH;
-    bgpos2 -= global_velocity/2 * delta;
-    if (bgpos2 <= -SCREENWIDTH) bgpos2 = SCREENWIDTH;
+    if (bgpos <= -SCREENWIDTH) bgpos = 0;
     return;
 }
 
@@ -110,9 +103,9 @@ void UpdateBackgrounds(float delta) {
 void DrawScenery(Texture foreground, Texture background, float delta) {
     UpdateBackgrounds(delta);
     DrawTexture(background, bgpos, 0, WHITE);
-    DrawTexture(background, bgpos2, 0, WHITE);
+    DrawTexture(background, bgpos+SCREENWIDTH, 0, WHITE);
     DrawTexture(foreground, fgpos, 0, WHITE);
-    DrawTexture(foreground, fgpos2, 0, WHITE);
+    DrawTexture(foreground, fgpos+SCREENWIDTH, 0, WHITE);
     DrawClouds(clouds, delta);
 	if (game_state == GAME) {
         DrawTexture(hazard.texture, hazard.position.x, hazard.position.y, WHITE);
