@@ -45,3 +45,17 @@ Line 179: The -MF option of GCC may have something to do with outputting the dep
 
 **16/11/24 :** Premake5 is the tool that automatically generates .make makefiles. 
 To take into account new, separate C files, just re-run it by running cd into build/ then ./premake5 gmake2
+
+# License
+
+Copyright (c) 2020-2024 Jeffery Myers
+
+This software is provided "as-is", without any express or implied warranty. In no event will the authors be held liable for any damages arising from the use of this software.
+
+Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
+
+    The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+
+    Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+
+    This notice may not be removed or altered from any source distribution.
