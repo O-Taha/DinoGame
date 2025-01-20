@@ -9,43 +9,43 @@ ifndef verbose
 endif
 
 ifeq ($(config),debug_x64)
-  DinoGame_config = debug_x64
+  Buns_Rush_config = debug_x64
   raylib_config = debug_x64
 
 else ifeq ($(config),debug_x86)
-  DinoGame_config = debug_x86
+  Buns_Rush_config = debug_x86
   raylib_config = debug_x86
 
 else ifeq ($(config),debug_arm64)
-  DinoGame_config = debug_arm64
+  Buns_Rush_config = debug_arm64
   raylib_config = debug_arm64
 
 else ifeq ($(config),release_x64)
-  DinoGame_config = release_x64
+  Buns_Rush_config = release_x64
   raylib_config = release_x64
 
 else ifeq ($(config),release_x86)
-  DinoGame_config = release_x86
+  Buns_Rush_config = release_x86
   raylib_config = release_x86
 
 else ifeq ($(config),release_arm64)
-  DinoGame_config = release_arm64
+  Buns_Rush_config = release_arm64
   raylib_config = release_arm64
 
 else
   $(error "invalid configuration $(config)")
 endif
 
-PROJECTS := DinoGame raylib
+PROJECTS := Buns_Rush raylib
 
 .PHONY: all clean help $(PROJECTS) 
 
 all: $(PROJECTS)
 
-DinoGame: raylib
-ifneq (,$(DinoGame_config))
-	@echo "==== Building DinoGame ($(DinoGame_config)) ===="
-	@${MAKE} --no-print-directory -C build/build_files -f DinoGame.make config=$(DinoGame_config)
+Buns_Rush: raylib
+ifneq (,$(Buns_Rush_config))
+	@echo "==== Building Buns_Rush ($(Buns_Rush_config)) ===="
+	@${MAKE} --no-print-directory -C build/build_files -f Buns_Rush.make config=$(Buns_Rush_config)
 endif
 
 raylib:
@@ -55,7 +55,7 @@ ifneq (,$(raylib_config))
 endif
 
 clean:
-	@${MAKE} --no-print-directory -C build/build_files -f DinoGame.make clean
+	@${MAKE} --no-print-directory -C build/build_files -f Buns_Rush.make clean
 	@${MAKE} --no-print-directory -C build/build_files -f raylib.make clean
 
 help:
@@ -72,7 +72,7 @@ help:
 	@echo "TARGETS:"
 	@echo "   all (default)"
 	@echo "   clean"
-	@echo "   DinoGame"
+	@echo "   Buns_Rush"
 	@echo "   raylib"
 	@echo ""
 	@echo "For more information, see https://github.com/premake/premake-core/wiki"

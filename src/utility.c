@@ -104,9 +104,9 @@ void DrawScenery(Texture foreground, Texture background, float delta) {
     UpdateBackgrounds(delta);
     DrawTexture(background, bgpos, 0, WHITE);
     DrawTexture(background, bgpos+SCREENWIDTH, 0, WHITE);
+    DrawClouds(clouds, delta);
     DrawTexture(foreground, fgpos, 0, WHITE);
     DrawTexture(foreground, fgpos+SCREENWIDTH, 0, WHITE);
-    DrawClouds(clouds, delta);
 	if (game_state == GAME) {
         DrawTexture(hazard.texture, hazard.position.x, hazard.position.y, WHITE);
     }

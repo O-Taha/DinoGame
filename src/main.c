@@ -54,6 +54,7 @@ int main() {
     Sound jump_sound = LoadSound("SFX/Jump.wav");
     Sound death_sound = LoadSound("SFX/hitHurt.wav");
     Image icon = LoadImage("Obstacles/TrafficLights.png");
+    ImageFormat(&icon, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
     SetWindowIcon(icon);
     PlayMusicStream(title_screen_music);
     PlayMusicStream(bg_music);

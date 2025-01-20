@@ -27,14 +27,14 @@ Changelog for all additions made by Taha to the project :
 
 16/11/24 :
 - Generated the compile_commands.json with bear tool for clang to recognize all included libraries (local to my computer since paths are too)
-- FIXED SEPARATE COMPILATION (just had to rerun ./premake5 gmake2 in the build/, which automatically generates DinoGame.make)
+- FIXED SEPARATE COMPILATION (just had to rerun ./premake5 gmake2 in the build/, which automatically generates Buns_Rush.make)
 - Added to the player :
     - a velocityY variable
     - an UpdatePlayerPhysics() function to handle gravity
     - a placeholder GROUND_Y value
 
 11/11/24 :
-- Added -I../include -Iinclude -I/include as extra file paths for headers in DinoGame.make to try and fix the 'resource_dir.h' file not found (didn't work)
+- Added -I../include -Iinclude -I/include as extra file paths for headers in Buns_Rush.make to try and fix the 'resource_dir.h' file not found (didn't work)
 
 - Added instructions to the README.md 
     - on building/running the executable

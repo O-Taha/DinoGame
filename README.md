@@ -22,14 +22,14 @@ The global Makefile in the working directory (now visible on Github) uses multip
 Here's the part of the makefile we're (probably) gonna use:
 Nb : l62 tells us to run make config=release_X** to build the release version (cf. make help)
 ```
-DinoGame: raylib
-ifneq (,$(DinoGame_config))
-    @echo "==== Building DinoGame ($(DinoGame_config)) ===="
-    @${MAKE} --no-print-directory -C build/build_files -f DinoGame.make config=$(DinoGame_config)
+Buns_Rush: raylib
+ifneq (,$(Buns_Rush_config))
+    @echo "==== Building Buns_Rush ($(Buns_Rush_config)) ===="
+    @${MAKE} --no-print-directory -C build/build_files -f Buns_Rush.make config=$(Buns_Rush_config)
 endif
 ```
 
-=> It goes to the DinoGame/build/build_files/DinoGame.make makefile 
+=> It goes to the Buns_Rush/build/build_files/Buns_Rush.make makefile 
 
 **Interesting lines and variables**
 
